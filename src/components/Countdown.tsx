@@ -13,11 +13,25 @@ function diff() {
 }
 
 export function Countdown() {
-  const [t, setT] = useState(diff());
+  const [t, setT] = useState<{ days: number; hours: number; minutes: number; seconds: number } | null>(null);
   useEffect(() => {
+    setT(diff());
     const id = setInterval(() => setT(diff()), 1000);
     return () => clearInterval(id);
   }, []);
+
+  if (!t) {
+    return (
+      <div
+        className="inline-flex items-center gap-4 sm:gap-6 rounded-2xl border border-border bg-card px-5 py-3 shadow-[var(--shadow-soft)]"
+        aria-hidden
+      >
+        <span className="font-display text-2xl sm:text-3xl tabular-nums text-foreground/40">
+          --:--:--
+        </span>
+      </div>
+    );
+  }
 
   const Item = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center">
