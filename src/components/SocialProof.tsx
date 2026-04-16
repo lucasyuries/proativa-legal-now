@@ -16,13 +16,9 @@ export function SocialProof() {
     <section className="py-20 sm:py-28 bg-surface">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="text-center max-w-2xl mx-auto">
-          <p className="text-xs uppercase tracking-widest text-background/70">Relatos</p>
-          <h2 className="mt-3 font-display text-3xl sm:text-4xl text-background text-balance">
-            Quem trocou planilha por conformidade real
+          <h2 className="font-display text-3xl sm:text-4xl text-background text-balance">
+            Relatos
           </h2>
-          <p className="mt-4 text-base text-background/70 text-pretty text-justify sm:text-center">
-            Histórias de empresas e consultorias que já usam o Proativa para entregar o PGR com segurança jurídica e ganhar tempo na rotina de SST.
-          </p>
         </div>
 
         {/* Quotes — mobile carrossel */}
