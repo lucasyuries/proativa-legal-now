@@ -105,7 +105,72 @@ export function Pricing() {
           </div>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        {/* Mobile: carrossel lateral */}
+        <div className="mt-12 lg:hidden -mx-4">
+          <div className="snap-row items-stretch">
+            {plans.map((p) => {
+              const price = annual ? p.annual : p.monthly;
+              return (
+                <div
+                  key={p.name}
+                  className={cn(
+                    "snap-item relative rounded-2xl border bg-card p-6 flex flex-col",
+                    p.highlighted
+                      ? "border-foreground shadow-[var(--shadow-elevated)]"
+                      : "border-border",
+                  )}
+                >
+                  {p.highlighted && (
+                    <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-foreground text-background px-3 py-1 text-[11px] font-medium tracking-wide">
+                      Mais escolhido
+                    </span>
+                  )}
+                  <h3 className="font-display text-2xl text-foreground">{p.name}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground min-h-[40px]">{p.desc}</p>
+
+                  <div className="mt-6">
+                    <p className="text-xs text-muted-foreground line-through">De {price.from}</p>
+                    <p className="mt-1 flex items-baseline gap-1.5">
+                      <span className="font-display text-4xl text-foreground">{price.now}</span>
+                      <span className="text-sm text-muted-foreground">
+                        /{annual ? "ano" : "mês"}
+                      </span>
+                    </p>
+                  </div>
+
+                  <ul className="mt-6 space-y-2.5 flex-1">
+                    {p.features.map((f) => (
+                      <li key={f.label} className="flex items-start gap-2.5 text-sm">
+                        {f.included ? (
+                          <Check className="h-4 w-4 mt-0.5 text-success shrink-0" strokeWidth={2.5} />
+                        ) : (
+                          <X className="h-4 w-4 mt-0.5 text-muted-foreground/50 shrink-0" />
+                        )}
+                        <span className={f.included ? "text-foreground" : "text-muted-foreground/70"}>
+                          {f.label}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    className="mt-8 w-full"
+                    variant={p.highlighted ? "default" : "outline"}
+                    size="lg"
+                  >
+                    Assinar {p.name}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-3 text-center text-[11px] uppercase tracking-widest text-muted-foreground">
+            ← deslize para comparar →
+          </p>
+        </div>
+
+        {/* Desktop: grid */}
+        <div className="mt-12 hidden lg:grid gap-6 lg:grid-cols-3">
           {plans.map((p) => {
             const price = annual ? p.annual : p.monthly;
             return (
