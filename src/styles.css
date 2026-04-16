@@ -48,53 +48,61 @@
 :root {
   --radius: 0.875rem;
 
-  /* Base — quase branco, levemente quente */
-  --background: oklch(0.992 0.003 95);
-  --foreground: oklch(0.18 0.025 230);
+  /* Paleta:
+     #ffffff  white
+     #a1c1be  sage / verde-azulado suave
+     #59554e  warm dark gray (texto/primary)
+     #f3f4e5  cream (background)
+     #e2e3d9  cream-muted (surface)
+  */
 
-  --surface: oklch(0.97 0.005 95);
-  --surface-muted: oklch(0.945 0.008 95);
+  /* Base — cream suave */
+  --background: oklch(0.965 0.018 105);          /* #f3f4e5 */
+  --foreground: oklch(0.38 0.012 80);            /* #59554e */
 
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.025 230);
+  --surface: oklch(0.93 0.012 105);              /* #e2e3d9 */
+  --surface-muted: oklch(0.91 0.012 105);
+
+  --card: oklch(1 0 0);                          /* #ffffff */
+  --card-foreground: oklch(0.38 0.012 80);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.025 230);
+  --popover-foreground: oklch(0.38 0.012 80);
 
-  /* Primary — azul-petróleo profundo (autoridade, confiança) */
-  --primary: oklch(0.32 0.06 220);
-  --primary-foreground: oklch(0.98 0.005 95);
+  /* Primary — warm dark gray (autoridade calma) */
+  --primary: oklch(0.38 0.012 80);               /* #59554e */
+  --primary-foreground: oklch(0.98 0.012 105);
 
-  /* Secondary — neutro */
-  --secondary: oklch(0.95 0.008 230);
-  --secondary-foreground: oklch(0.22 0.04 230);
+  /* Secondary — cream-muted */
+  --secondary: oklch(0.93 0.012 105);
+  --secondary-foreground: oklch(0.38 0.012 80);
 
-  --muted: oklch(0.96 0.005 95);
-  --muted-foreground: oklch(0.48 0.02 230);
+  --muted: oklch(0.93 0.012 105);
+  --muted-foreground: oklch(0.5 0.012 80);
 
-  /* Accent — verde menta (conformidade, aprovado) */
-  --accent: oklch(0.78 0.12 165);
-  --accent-foreground: oklch(0.2 0.05 200);
+  /* Accent — sage (#a1c1be) */
+  --accent: oklch(0.78 0.028 195);
+  --accent-foreground: oklch(0.32 0.015 80);
 
-  /* Success — verde de validação */
-  --success: oklch(0.62 0.14 160);
+  /* Success — sage mais saturado */
+  --success: oklch(0.66 0.05 190);
   --success-foreground: oklch(0.99 0 0);
 
-  /* Warning — âmbar para urgência */
-  --warning: oklch(0.78 0.16 75);
-  --warning-foreground: oklch(0.2 0.05 60);
+  /* Warning — terracota suave (contraste com a paleta fria) */
+  --warning: oklch(0.74 0.11 55);
+  --warning-foreground: oklch(0.28 0.04 60);
 
-  --destructive: oklch(0.58 0.22 27);
+  --destructive: oklch(0.55 0.18 30);
   --destructive-foreground: oklch(0.99 0 0);
 
-  --border: oklch(0.9 0.01 230);
-  --input: oklch(0.92 0.01 230);
-  --ring: oklch(0.32 0.06 220);
+  --border: oklch(0.86 0.012 105);
+  --input: oklch(0.88 0.012 105);
+  --ring: oklch(0.78 0.028 195);
 
-  --chart-1: oklch(0.32 0.06 220);
-  --chart-2: oklch(0.62 0.14 160);
-  --chart-3: oklch(0.78 0.16 75);
-  --chart-4: oklch(0.55 0.18 30);
-  --chart-5: oklch(0.45 0.1 280);
+  --chart-1: oklch(0.38 0.012 80);
+  --chart-2: oklch(0.78 0.028 195);
+  --chart-3: oklch(0.66 0.05 190);
+  --chart-4: oklch(0.74 0.11 55);
+  --chart-5: oklch(0.55 0.04 80);
 }
 
 .dark {
@@ -148,12 +156,34 @@
 
   .bg-grid {
     background-image:
-      linear-gradient(to right, oklch(0.32 0.06 220 / 0.06) 1px, transparent 1px),
-      linear-gradient(to bottom, oklch(0.32 0.06 220 / 0.06) 1px, transparent 1px);
+      linear-gradient(to right, oklch(0.38 0.012 80 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, oklch(0.38 0.012 80 / 0.06) 1px, transparent 1px);
     background-size: 32px 32px;
   }
 
   .gradient-radial-soft {
-    background: radial-gradient(ellipse at top, oklch(0.78 0.12 165 / 0.18), transparent 60%);
+    background: radial-gradient(ellipse at top, oklch(0.78 0.028 195 / 0.35), transparent 60%);
+  }
+
+  /* Mobile snap carousel */
+  .snap-row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 1rem;
+    padding-inline: 1rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .snap-row::-webkit-scrollbar { display: none; }
+  .snap-item {
+    scroll-snap-align: center;
+    flex: 0 0 85%;
+    max-width: 22rem;
+  }
+  @media (min-width: 640px) {
+    .snap-item { flex-basis: 60%; }
   }
 }

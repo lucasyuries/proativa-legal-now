@@ -27,7 +27,21 @@ export function HowItWorks() {
           </h2>
         </div>
 
-        <ol className="mt-12 grid gap-6 sm:grid-cols-3">
+        {/* Mobile: carrossel */}
+        <div className="mt-10 sm:hidden -mx-4">
+          <div className="snap-row">
+            {steps.map((s) => (
+              <div key={s.n} className="snap-item rounded-2xl border border-border bg-card p-6">
+                <span className="font-display text-5xl text-foreground/10 leading-none">{s.n}</span>
+                <h3 className="mt-4 font-display text-xl text-foreground">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: grid */}
+        <ol className="mt-12 hidden sm:grid gap-6 sm:grid-cols-3">
           {steps.map((s) => (
             <li key={s.n} className="relative rounded-2xl border border-border bg-card p-6 sm:p-8">
               <span className="font-display text-5xl text-foreground/10 leading-none">{s.n}</span>

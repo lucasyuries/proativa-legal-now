@@ -32,7 +32,26 @@ export function Risk() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 sm:gap-6 sm:grid-cols-3">
+        {/* Mobile: carrossel lateral */}
+        <div className="mt-10 sm:hidden -mx-4">
+          <div className="snap-row">
+            {items.map((it) => (
+              <div
+                key={it.title}
+                className="snap-item rounded-2xl border border-border bg-card p-6"
+              >
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-destructive/10 text-destructive">
+                  <it.icon className="h-5 w-5" strokeWidth={2} />
+                </div>
+                <h3 className="mt-5 font-display text-xl text-foreground">{it.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{it.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: grid */}
+        <div className="mt-12 hidden sm:grid gap-6 sm:grid-cols-3">
           {items.map((it) => (
             <div
               key={it.title}

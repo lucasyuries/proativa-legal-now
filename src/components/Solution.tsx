@@ -47,7 +47,21 @@ export function Solution() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        {/* Mobile: carrossel lateral */}
+        <div className="mt-10 sm:hidden -mx-4">
+          <div className="snap-row">
+            {features.map((f) => (
+              <div key={f.title} className="snap-item rounded-2xl border border-border bg-card p-6">
+                <f.icon className="h-5 w-5 text-primary" strokeWidth={2} />
+                <h3 className="mt-5 font-display text-lg text-foreground">{f.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop: grid */}
+        <div className="mt-12 hidden sm:grid gap-px overflow-hidden rounded-2xl border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
           {features.map((f) => (
             <div key={f.title} className="bg-card p-6 sm:p-8">
               <f.icon className="h-5 w-5 text-primary" strokeWidth={2} />
