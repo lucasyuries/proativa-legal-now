@@ -160,11 +160,17 @@ export function Pricing() {
                   </ul>
 
                   <Button
+                    asChild
                     className="mt-8 w-full"
                     variant={p.highlighted ? "default" : "outline"}
                     size="lg"
                   >
-                    Assinar {p.name}
+                    <Link
+                      to="/checkout"
+                      search={{ plan: p.id, cycle: annual ? "annual" : "monthly" }}
+                    >
+                      Assinar {p.name}
+                    </Link>
                   </Button>
                 </div>
               );
@@ -225,11 +231,17 @@ export function Pricing() {
                 </ul>
 
                 <Button
+                  asChild
                   className="mt-8 w-full"
                   variant={p.highlighted ? "default" : "outline"}
                   size="lg"
                 >
-                  Assinar {p.name}
+                  <Link
+                    to="/checkout"
+                    search={{ plan: p.id, cycle: annual ? "annual" : "monthly" }}
+                  >
+                    Assinar {p.name}
+                  </Link>
                 </Button>
               </div>
             );

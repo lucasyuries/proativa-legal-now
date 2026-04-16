@@ -56,16 +56,14 @@ function CheckoutPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/checkout", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planId, cycle }),
+      // Importação dinâmica evita carregar a server fn no bundle inicial
+      const { createMercadoPagoCheckout } = await import("@/lib/mercado-pago");
+      const data = await createMercadoPagoCheckout({
+        data: { planId: planId!, cycle: cycle!, origin: window.location.origin },
       });
-      const data = (await res.json()) as { init_point?: string; error?: string };
-      if (!res.ok || !data.init_point) {
-        throw new Error(data.error ?? "Não foi possível iniciar o pagamento.");
+      if (!data?.init_point) {
+        throw new Error("Não foi possível iniciar o pagamento.");
       }
-      // Redireciona para o Checkout Pro do Mercado Pago
       window.location.href = data.init_point;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro inesperado");
