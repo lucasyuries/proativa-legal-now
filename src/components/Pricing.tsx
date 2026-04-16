@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Check, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { PlanId } from "@/lib/plans";
 
 type Plan = {
+  id: PlanId;
   name: string;
   desc: string;
   monthly: { from: string; now: string };
