@@ -27,19 +27,19 @@ export const PLANS: Record<PlanId, Plan> = {
     id: "starter",
     name: "Starter",
     description: "Pequenas empresas e consultores independentes.",
-    price: { monthly: 20.97, annual: 209.1 },
+    price: { monthly: 1, annual: 1 },
   },
   professional: {
     id: "professional",
     name: "Profissional",
     description: "Empresas e consultorias SST em crescimento.",
-    price: { monthly: 29.97, annual: 299.1 },
+    price: { monthly: 29.97, annual: 299.9 },
   },
   enterprise: {
     id: "enterprise",
     name: "Empresarial",
     description: "Grandes operações, redes e consultorias.",
-    price: { monthly: 59.97, annual: 599.1 },
+    price: { monthly: 59.97, annual: 599.9 },
   },
 };
 
