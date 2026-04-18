@@ -20,13 +20,19 @@ function AuthenticatedLayout() {
 
   useEffect(() => {
     if (!loading && !user) {
+      // Evita redirect-loop: se a "rota atual" já é uma página pública de auth,
+      // não acumula `?redirect=` em cima de si mesma.
+      const path = location.pathname;
+      const isAuthRoute =
+        path === "/login" || path === "/cadastro" || path.startsWith("/esqueci-senha") || path.startsWith("/reset-password");
+      const safeRedirect = isAuthRoute ? "/" : location.href;
       navigate({
         to: "/login",
-        search: { redirect: location.href },
+        search: { redirect: safeRedirect },
         replace: true,
       });
     }
-  }, [loading, user, navigate, location.href]);
+  }, [loading, user, navigate, location.href, location.pathname]);
 
   if (loading || !user) {
     return (
