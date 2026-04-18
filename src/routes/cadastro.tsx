@@ -5,7 +5,7 @@
 
 import { useState, type FormEvent } from "react";
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { Loader2, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { Loader2, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -33,7 +33,6 @@ function SignupPage() {
   const { redirect } = useSearch({ from: "/cadastro" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
   const [form, setForm] = useState({ fullName: "", email: "", phone: "", password: "" });
 
   function set<K extends keyof typeof form>(k: K) {
@@ -54,16 +53,15 @@ function SignupPage() {
       email: parsed.data.email,
       password: parsed.data.password,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
         data: {
           full_name: parsed.data.fullName,
           phone: parsed.data.phone,
         },
       },
     });
-    setLoading(false);
 
     if (authError) {
+      setLoading(false);
       setError(
         authError.message.includes("already registered")
           ? "Este e-mail já está cadastrado. Faça login."
@@ -72,32 +70,27 @@ function SignupPage() {
       return;
     }
 
-    // Se confirmação de email estiver desativada, já terá session — redireciona.
+    // Se já tem sessão (confirmação desativada no Supabase), segue direto.
     if (authData.session) {
+      setLoading(false);
       navigate({ to: redirect ?? "/", search: {} as never });
       return;
     }
-    setSuccess(true);
-  }
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md text-center rounded-2xl border border-border bg-card p-8 shadow-[var(--shadow-soft)]">
-          <CheckCircle2 className="mx-auto h-12 w-12 text-success" />
-          <h1 className="mt-4 font-display text-2xl text-foreground">Confira seu e-mail</h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Enviamos um link de confirmação para <strong>{form.email}</strong>. Clique nele para
-            ativar sua conta e voltar ao Proativa.
-          </p>
-          <Button asChild variant="outline" className="mt-6 w-full">
-            <Link to="/login" search={{ redirect } as never}>
-              Já confirmei, ir para o login
-            </Link>
-          </Button>
-        </div>
-      </div>
-    );
+    // Caso o projeto Supabase ainda exija confirmação, tentamos logar mesmo
+    // assim com a senha recém criada — funciona quando "Confirm email" está off.
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: parsed.data.email,
+      password: parsed.data.password,
+    });
+    setLoading(false);
+    if (signInError) {
+      setError(
+        "Conta criada, mas não foi possível entrar automaticamente. Tente fazer login.",
+      );
+      return;
+    }
+    navigate({ to: redirect ?? "/", search: {} as never });
   }
 
   return (
