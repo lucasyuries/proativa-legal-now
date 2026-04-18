@@ -1,13 +1,13 @@
 // ============================================================================
 // SERVER FUNCTION — Status público da compra (consulta por external_reference)
 // ----------------------------------------------------------------------------
-// Usada pelas páginas /checkout/sucesso, /checkout/erro e /checkout/pendente.
-// Recebe o `ref` (UUID gerado no checkout, salvo em mp_external_reference) e
-// devolve status + (se aprovado) senha temporária pra exibir como fallback
-// caso o e-mail demore.
+// Usada pelas páginas /checkout/sucesso, /checkout/erro e /checkout/pendente
+// apenas para mostrar dados da compra (plano, ciclo, valor, status).
+// Não há provisionamento automático: o usuário usa o login que criou no
+// cadastro prévio.
 //
-// SEGURANÇA: o `ref` é um UUID v4 imprevisível. Não vaza dados sensíveis sem
-// posse desse UUID, que só é entregue ao próprio comprador (URL de retorno).
+// SEGURANÇA: o `ref` é um UUID v4 imprevisível, entregue apenas ao comprador
+// na URL de retorno do Mercado Pago.
 // ============================================================================
 
 import { createServerFn } from "@tanstack/react-start";
@@ -16,10 +16,10 @@ import { supabaseAdmin } from "@/integrations/supabase/admin.server";
 export interface CheckoutStatusOutput {
   status: "pending" | "approved" | "rejected" | "unknown";
   plan_id: string | null;
-  cycle: string | null;
+  plan_name: string | null;
+  cycle: "monthly" | "annual" | null;
+  amount: number | null;
   user_email: string | null;
-  temp_password: string | null;
-  provisioned_at: string | null;
 }
 
 export const getCheckoutStatus = createServerFn({ method: "POST" })
@@ -33,7 +33,7 @@ export const getCheckoutStatus = createServerFn({ method: "POST" })
   .handler(async ({ data }): Promise<CheckoutStatusOutput> => {
     const { data: sub } = await supabaseAdmin
       .from("subscriptions")
-      .select("status, plan_id, cycle, user_id, provisioned_at, metadata")
+      .select("status, plan_id, cycle, amount, user_id, metadata")
       .eq("mp_external_reference", data.ref)
       .maybeSingle();
 
@@ -41,10 +41,10 @@ export const getCheckoutStatus = createServerFn({ method: "POST" })
       return {
         status: "unknown",
         plan_id: null,
+        plan_name: null,
         cycle: null,
+        amount: null,
         user_email: null,
-        temp_password: null,
-        provisioned_at: null,
       };
     }
 
@@ -55,20 +55,22 @@ export const getCheckoutStatus = createServerFn({ method: "POST" })
     }
 
     const meta = (sub.metadata ?? {}) as Record<string, unknown>;
-    const tempPassword =
-      typeof meta.temp_password === "string" ? (meta.temp_password as string) : null;
+    const plan_name = typeof meta.plan_name === "string" ? meta.plan_name : null;
 
     const normalizedStatus: CheckoutStatusOutput["status"] =
       sub.status === "approved" || sub.status === "pending" || sub.status === "rejected"
         ? sub.status
         : "unknown";
 
+    const normalizedCycle: CheckoutStatusOutput["cycle"] =
+      sub.cycle === "monthly" || sub.cycle === "annual" ? sub.cycle : null;
+
     return {
       status: normalizedStatus,
       plan_id: sub.plan_id ?? null,
-      cycle: sub.cycle ?? null,
+      plan_name,
+      cycle: normalizedCycle,
+      amount: typeof sub.amount === "number" ? sub.amount : null,
       user_email,
-      temp_password: sub.provisioned_at ? tempPassword : null,
-      provisioned_at: sub.provisioned_at ?? null,
     };
   });
