@@ -1,19 +1,14 @@
 // ============================================================================
 // Supabase BROWSER client — conectado ao banco do SISTEMA Proativa
 // ----------------------------------------------------------------------------
-// Usa a chave publishable (anon). RLS aplica como o usuário autenticado.
-// Persiste sessão no localStorage para manter login entre reloads.
+// URL e chave PUBLISHABLE são públicas por design (RLS protege os dados).
+// A service role NUNCA aparece aqui — só em admin.server.ts.
 // ============================================================================
 
 import { createClient } from "@supabase/supabase-js";
 
-const SUPABASE_URL = import.meta.env.VITE_SYSTEM_SUPABASE_URL as string;
-const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SYSTEM_SUPABASE_PUBLISHABLE_KEY as string;
-
-if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
-  // Em dev, ajuda a diagnosticar; em build com SSR pode ser undefined até bundle
-  console.warn("[supabase] VITE_SYSTEM_SUPABASE_URL/KEY ausente.");
-}
+const SUPABASE_URL = "https://pmoofkgrqcgtcrrgyzsu.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_2eSpgen_FuENNYJbFVXhbw_62kNeZfs";
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY, {
   auth: {
