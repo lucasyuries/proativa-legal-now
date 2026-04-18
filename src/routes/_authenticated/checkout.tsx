@@ -16,7 +16,7 @@ type Search = {
   cycle?: BillingCycle;
 };
 
-export const Route = createFileRoute("/checkout")({
+export const Route = createFileRoute("/_authenticated/checkout")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     plan: (search.plan as PlanId) ?? "professional",
     cycle: (search.cycle as BillingCycle) ?? "annual",
@@ -32,7 +32,7 @@ export const Route = createFileRoute("/checkout")({
 });
 
 function CheckoutPage() {
-  const { plan: planId, cycle } = useSearch({ from: "/checkout" });
+  const { plan: planId, cycle } = useSearch({ from: "/_authenticated/checkout" });
   const plan = getPlan(planId);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -56,14 +56,21 @@ function CheckoutPage() {
     setLoading(true);
     setError(null);
     try {
-      // Importação dinâmica evita carregar a server fn no bundle inicial
+      const { supabase } = await import("@/integrations/supabase/client");
+      const { data: sessionData } = await supabase.auth.getSession();
+      const accessToken = sessionData.session?.access_token;
+      if (!accessToken) throw new Error("Sessão expirada. Faça login novamente.");
+
       const { createMercadoPagoCheckout } = await import("@/lib/mercado-pago");
       const data = await createMercadoPagoCheckout({
-        data: { planId: planId!, cycle: cycle!, origin: window.location.origin },
+        data: {
+          planId: planId!,
+          cycle: cycle!,
+          origin: window.location.origin,
+          accessToken,
+        },
       });
-      if (!data?.init_point) {
-        throw new Error("Não foi possível iniciar o pagamento.");
-      }
+      if (!data?.init_point) throw new Error("Não foi possível iniciar o pagamento.");
       window.location.href = data.init_point;
     } catch (e) {
       setError(e instanceof Error ? e.message : "Erro inesperado");
