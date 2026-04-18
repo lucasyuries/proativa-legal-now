@@ -16,7 +16,7 @@ type Search = {
   cycle?: BillingCycle;
 };
 
-export const Route = createFileRoute("/checkout")({
+export const Route = createFileRoute("/_authenticated/checkout")({
   validateSearch: (search: Record<string, unknown>): Search => ({
     plan: (search.plan as PlanId) ?? "professional",
     cycle: (search.cycle as BillingCycle) ?? "annual",
